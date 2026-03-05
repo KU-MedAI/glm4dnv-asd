@@ -112,6 +112,31 @@ Each model was evaluated under two settings:
 
 ---
 
+## Environment Setting
+### Required Packages
+
+```python
+# PyTorch (CUDA support recommended)
+pip install torch torchvision torchaudio
+
+# Flow Matching and ODE Solver
+pip install torchdiffeq
+
+# Data Processing
+pip install pandas numpy scipy
+
+# Molecular Processing and Evaluation
+pip install rdkit
+
+# Progress Display
+pip install tqdm
+
+# Optional: Experiment Tracking
+pip install wandb
+```
+
+---
+
 ## Reproducing the Benchmark
 
 The main steps to reproduce the benchmark are outlined below.
