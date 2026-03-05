@@ -85,14 +85,10 @@ Each model was evaluated under two settings:
 │
 ├── fine-tuned
 │   ├── README.md
-│   ├── ft_classification
-│   │   └── {model directories}
-│   │
-│   ├── ft_regression
-│   │   └── {model directories}
-│   │
-│   └── ft_variant_pooling
-│       └── {model directories}
+│   └── {model directories}
+|       ├── classification 
+|       ├── regression
+│       └── variant-pooling
 │
 ├── set_transformer
 │   └── set_transformer.ipynb
