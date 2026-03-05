@@ -11,10 +11,16 @@ fine-tuned/
 ├── README.md
 └── {model directories}
      ├── classification
-         ├── ft_{model}_classification.py
-         └── run_ft_{model}_classification.sh
+     │    ├── ft_{model}_classification.py
+     │    └── run_ft_{model}_classification.sh
+     │
      ├── regression
+     │    ├── ft_{model}_regression.py
+     │    └── run_ft_{model}_regression.sh
+     │
      └── variant-pooling
+          ├── ft_{model}_variant_pooling.py
+          └── run_ft_{model}_variant_pooling.sh
 ```
 
 ## Tasks
@@ -31,11 +37,11 @@ Each task is implemented separately for each genomic language model.
 Example:
 
 ```bash
-bash ft-classification/dnabert/run.sh
+bash DNABERT/classification/run_ft_dnabert_classification.sh
 ```
 
 After fine-tuning, variant pooling is performed using scripts in: 
 
 ```bash
-bash variant-pooling/dnabert/pooling_best.sh
+bash DNABERT/variant-pooling/run_ft_dnabert_variant_pooling.sh
 ```
