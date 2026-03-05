@@ -155,4 +155,4 @@ The analysis scripts reproduce the main results reported in the paper, including
 - Fine-tuning effects on gLM embeddings
 - Biological interpretability of ASD prediction
 
-See the `analysis/` directory for details.
+See the `analysis/README.md` directory for details.
