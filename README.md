@@ -23,15 +23,14 @@ Conclusions: Although fine-tuning was applied to integrate functional variant in
 This repository provides the code and analysis pipeline used in our study  
 **“Challenges in De Novo Variant-Based Autism Spectrum Disorder Prediction Using Genomic Language Models.”**
 
-We systematically benchmark seven genomic language models (gLMs) for predicting **autism spectrum disorder (ASD)** from **de novo variants**.  
-The benchmark evaluates whether **variant representations produced by gLMs** can support **sample-level disease prediction** within a unified prediction pipeline.
+We systematically benchmark seven genomic language models (gLMs) for predicting **autism spectrum disorder (ASD)** from **de novo variants**.
 
 This repository includes:
 
-- a unified **benchmarking pipeline for genomic language models**
+- a unified **benchmarking framework for genomic language models**
 - a **sample-level ASD prediction pipeline**
-- analyses of **representation shifts after fine-tuning**
-- evaluation of **biological interpretability of prediction model attention**
+- analyses of **fine-tuning effects on gLM representations**
+- evaluation of the **biological interpretability of model attention**
 
 ---
 
@@ -65,13 +64,12 @@ Each model was evaluated under two settings:
 2. **Disease (ASD) Prediction**  
 - A Set Transformer model aggregates variant representations at the sample level to predict ASD status.
 
-3. **Analysis**  
-- To evaluate the variant representation capability of gLMs and the performance of ASD prediction, the following analyses are conducted.  
-  - **Fine-tuning Effects Analysis**  
-    - Examination of representation shifts in the gLM embedding space  
-    - Examination of the redistribution of attention scores obtained from the Set Transformer  
-  - **Biological Interpretability Analysis**  
-    - Examination of enrichment in disease-relevant biological pathways
+3. **Analysis**
+- **Fine-tuning Effects Analysis**
+  - Representation shifts in the gLM embedding space
+  - Redistribution of attention scores from the Set Transformer
+- **Biological Interpretability Analysis**
+  - Enrichment of disease-relevant biological pathways
 
 ---
 
