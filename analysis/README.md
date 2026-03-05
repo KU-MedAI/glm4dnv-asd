@@ -32,8 +32,8 @@ These analyses assess embedding representations and attention scores at the vari
 
 ### Representational shifts in latent embedding space
 - Compute **cosine similarity** between **reference and variant embeddings** for zero-shot and fine-tuned models.
-- Stratify variants by **VEP impact** and compare the magnitude of **representation shifts**.
-- Stratify variants by **CADD** and evaluate whether shifts are enriched in **predicted pathogenic variants**.
+- Stratify variants by **VEP impact** and evaluate whether shifts are enriched in **pathogenic variants**.
+- Stratify variants by **CADD** and evaluate whether shifts are enriched in **pathogenic variants**.
 
 ### Functional variant enrichment in attention scores
 - Normalize variant-level attention scores within each sample using **CLR transformation**.
