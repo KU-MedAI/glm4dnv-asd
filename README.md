@@ -77,33 +77,17 @@ Each model was evaluated under two settings:
 
 ```bash
 ├── data
-│   └── README.md
-│
 ├── zero-shot
-│   ├── README.md
-│   └── zs_variant_pooling.ipynb
-│
 ├── fine-tuned
 │   ├── README.md
 │   └── {model directories}
 |       ├── classification 
 |       ├── regression
 │       └── variant-pooling
-│
 ├── set_transformer
-│   └── set_transformer.ipynb
-│
 └── analysis
     ├── fine-tuning-effects
-    │   ├── README.md
-    │   ├── embedding_analysis.ipynb
-    │   └── untitle1.ipynb
-    │   └── untitle2.ipynb
-    │
     └── biological_interpretability
-        ├── README.md
-        ├── attention_only_enrichment_analysis.py
-        └── severity_joint_enrichment_analysis.py
 ```
 
 ---
