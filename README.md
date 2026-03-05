@@ -77,14 +77,18 @@ Each model was evaluated under two settings:
 
 ```bash
 ├── data
+│ 
 ├── zero-shot
+│ 
 ├── fine-tuned
 │   ├── README.md
 │   └── {model directories}
-|       ├── classification 
-|       ├── regression
-│       └── variant-pooling
+│        ├── classification 
+│        ├── regression
+│        └── variant-pooling
+│ 
 ├── set_transformer
+│ 
 └── analysis
     ├── fine-tuning-effects
     └── biological_interpretability
