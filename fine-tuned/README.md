@@ -6,8 +6,8 @@
 This directory contains the code for fine-tuning genomic language models (gLMs) used in the benchmarking pipeline.
 
 It includes:
-- task-specific fine-tuning scripts for multiple gLMs
-- scripts for **variant pooling** to generate variant-level embeddings from fine-tuned models
+- **task-specific fine-tuning scripts for multiple gLMs**
+- **scripts for variant pooling to generate variant-level embeddings from fine-tuned models**
 
 Fine-tuning uses task-specific training datasets, while variant pooling is applied to de novo variant datasets used for downstream ASD prediction.
 
