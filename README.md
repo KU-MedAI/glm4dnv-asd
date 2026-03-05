@@ -71,8 +71,17 @@ project_root/
 # PyTorch (CUDA support recommended)
 pip install torch torchvision torchaudio
 
+# Transformers / Genomic Language Models
+pip install transformers accelerate huggingface-hub
+
 # Data Processing
-pip install pandas numpy scipy
+pip install pandas numpy scipy pyarrow
+
+# Visualization
+pip install matplotlib seaborn
+
+# Statistical Analysis
+pip install statsmodels scikit-learn
 
 # Progress Display
 pip install tqdm
