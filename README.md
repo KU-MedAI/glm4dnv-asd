@@ -119,17 +119,14 @@ Each model was evaluated under two settings:
 # PyTorch (CUDA support recommended)
 pip install torch torchvision torchaudio
 
-# Flow Matching and ODE Solver
-pip install torchdiffeq
-
 # Data Processing
 pip install pandas numpy scipy
 
-# Molecular Processing and Evaluation
-pip install rdkit
-
 # Progress Display
 pip install tqdm
+
+# Analysis - GSEApy Enrichr
+pip install gseapy
 
 # Optional: Experiment Tracking
 pip install wandb
