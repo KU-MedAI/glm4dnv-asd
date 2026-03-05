@@ -1,0 +1,230 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+
+export WANDB_ENTITY="${WANDB_ENTITY:-autism}"
+export WANDB_PROJECT="${WANDB_PROJECT:-dnabert2_ft_ncre}"
+
+
+: "${RUN_ROOT:=/path/to/experiments/dnabert2/ncre}" 
+export RUN_ROOT
+
+: "${BASE_DIR:=/fine-tuned/DNABERT-2/regression}"
+: "${DATA_PATH:=/path/to/data/NCRE_activity_filtered.parquet}"
+: "${LABEL_COL:=activity_score}"
+: "${SEQ_COL:=NCREs_seq}"
+: "${CHECKPOINT:=zhihan1996/DNABERT-2-117M}"
+
+FT_OUTPUT_ROOT="${RUN_ROOT}/ft/output"
+FT_LOG_ROOT="${RUN_ROOT}/ft/logs"
+mkdir -p "${FT_OUTPUT_ROOT}" "${FT_LOG_ROOT}"
+
+PY="${BASE_DIR}/ft_dnabert2_regression.py" 
+
+if [[ -z "${FT_GPU_IDS+x}" ]]; then
+    FT_GPU_IDS=(1)
+fi
+NUM_GPUS=${#FT_GPU_IDS[@]}
+GPU_IDS=("${FT_GPU_IDS[@]}")
+
+# Fixed knobs
+export SEED=42
+export WARMUP_STEPS=200
+
+cd "${BASE_DIR}"
+
+AGENT_SCRIPT="${BASE_DIR}/wandb_agent_runner_ncre.sh"
+
+cat > "${AGENT_SCRIPT}" <<'AGENT_EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+LR=""
+WD=""
+BS=""
+R=""
+DROP=""
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --learning_rate=*) LR="${1#*=}"; shift ;;
+    --weight_decay=*) WD="${1#*=}"; shift ;;
+    --per_device_train_batch_size=*) BS="${1#*=}"; shift ;;
+    --lora_r=*) R="${1#*=}"; shift ;;
+    --lora_dropout=*) DROP="${1#*=}"; shift ;;
+    *) shift ;;
+  esac
+done
+
+R_INT="$(printf "%s" "${R}" | sed 's/[^0-9].*//')"
+if [[ -z "${R_INT}" ]]; then
+  echo "[ERROR] Invalid lora_r: ${R}"
+  exit 1
+fi
+
+ALPHA=$((R_INT * 2))
+RUN_ID="${WANDB_RUN_ID:-local}"
+
+RUN_NAME="lr${LR}_r${R}_a${ALPHA}_bs${BS}_wd${WD}_dp${DROP}_seed${SEED}_wu${WARMUP_STEPS}_${RUN_ID}"
+OUTPUT_SUBDIR="${RUN_NAME}"
+LOG_SUBDIR="${RUN_NAME}"
+
+echo "============================================"
+echo "RUN_NAME: ${RUN_NAME}"
+echo "RUN_ROOT: ${RUN_ROOT}"
+echo "FT_OUTPUT_ROOT: ${FT_OUTPUT_ROOT}"
+echo "FT_LOG_ROOT   : ${FT_LOG_ROOT}"
+echo "GPU: ${CUDA_VISIBLE_DEVICES}"
+echo "============================================"
+
+python "${PY}" \
+  --data_path "${DATA_PATH}" \
+  --seq_col "${SEQ_COL}" \
+  --label_col "${LABEL_COL}" \
+  --checkpoint "${CHECKPOINT}" \
+  --output_root "${FT_OUTPUT_ROOT}" \
+  --output_subdir "${OUTPUT_SUBDIR}" \
+  --bf16 \
+  --log_root "${FT_LOG_ROOT}" \
+  --log_subdir "${LOG_SUBDIR}" \
+  --num_train_epochs 100 \
+  --per_device_train_batch_size "${BS}" \
+  --per_device_eval_batch_size "${BS}" \
+  --learning_rate "${LR}" \
+  --weight_decay "${WD}" \
+  --warmup_steps "${WARMUP_STEPS}" \
+  --use_lora \
+  --lora_r "${R}" \
+  --lora_alpha "${ALPHA}" \
+  --lora_dropout "${DROP}" \
+  --lora_target_modules "query,value" \
+  --keep_layernorm_trainable 0 \
+  --eval_strategy epoch \
+  --save_strategy epoch \
+  --save_total_limit 2 \
+  --load_best_model_at_end \
+  --metric_for_best_model eval_loss \
+  --max_length 512 \
+  --early_stopping \
+  --early_stopping_patience 5 \
+  --early_stopping_threshold 0.0 \
+  --logging_steps 100 \
+  --overwrite_output_dir \
+  --remove_unused_columns False \
+  --report_to wandb \
+  --run_name "${RUN_NAME}" \
+  --seed "${SEED}" 
+AGENT_EOF
+
+chmod +x "${AGENT_SCRIPT}"
+
+export RUN_ROOT
+export AGENT_SCRIPT FT_OUTPUT_ROOT FT_LOG_ROOT DATA_PATH SEQ_COL LABEL_COL CHECKPOINT PY
+export NUM_GPUS SEED WARMUP_STEPS
+
+echo "[PHASE 1] Creating Sweep"
+
+SWEEP_OUT="$(python - <<'EOF'
+import os, wandb
+
+ENTITY = os.environ["WANDB_ENTITY"]
+PROJECT = os.environ["WANDB_PROJECT"]
+AGENT_SCRIPT = os.environ["AGENT_SCRIPT"]
+
+# **Sweep settings configurable**
+cfg = {
+    "method": "grid",
+    "metric": {"name": "test/PCC", "goal": "maximize"},  
+    "parameters": {
+        "learning_rate": {"values": [5e-5]},
+        "weight_decay": {"values": [0.01]},
+        "per_device_train_batch_size": {"values": [32]},
+        "lora_r": {"values": [16]},
+        "lora_dropout": {"values": [0.05]},
+    },
+    "command": ["${env}", "bash", AGENT_SCRIPT, "${args}"]
+}
+
+sid = wandb.sweep(cfg, entity=ENTITY, project=PROJECT)
+print(f"{ENTITY}/{PROJECT}/{sid}")
+EOF
+)"
+
+SWEEP_PATH="$(echo "${SWEEP_OUT}" | grep -Eo '[^ ]+/[^ ]+/[A-Za-z0-9]+' | tail -n 1)"
+echo "[OK] SWEEP_PATH=${SWEEP_PATH}"
+
+echo "[PHASE 2] Running Agents"
+
+PIDS=()
+for gpu_id in "${GPU_IDS[@]}"; do
+(
+  export CUDA_VISIBLE_DEVICES=${gpu_id}
+  wandb agent "${SWEEP_PATH}"
+) &
+PIDS+=($!)
+done
+
+for pid in "${PIDS[@]}"; do
+  wait "$pid"
+done
+
+echo "SWEEP DONE"
+
+
+echo "[PHASE 3] Selecting BEST run"
+
+python - <<'PY'
+import os, glob, pandas as pd
+
+root = os.environ["FT_OUTPUT_ROOT"]
+
+pattern = os.path.join(root, "*", "test_metrics.csv")
+paths = glob.glob(pattern)
+
+best_score = -1e9
+best_p = None
+
+for p in paths:
+    try:
+        df = pd.read_csv(p)
+        pcc = float(df.loc[0, "test_PCC"])
+        if not pd.isna(pcc) and pcc > best_score:
+            best_score = pcc
+            best_p = p
+    except Exception as e:
+        print(f"Error reading {p}: {e}")
+        pass
+
+if best_p is None:
+    print("No valid test_metrics.csv found, trying SCC as backup...")
+    for p in paths:
+        try:
+            df = pd.read_csv(p)
+            scc = float(df.loc[0, "test_SCC"])
+            if not pd.isna(scc) and scc > best_score:
+                best_score = scc
+                best_p = p
+        except Exception:
+            pass
+
+if best_p is None:
+    raise SystemExit("No valid test_metrics.csv found with PCC or SCC")
+
+run_dir = os.path.dirname(best_p)
+
+out_txt = os.path.join(root, "best_run.txt")
+with open(out_txt, "w") as f:
+    f.write(run_dir + "\n")
+
+print("BEST_SCORE =", best_score)
+print("BEST_RUN_DIR =", run_dir)
+print("Saved:", out_txt)
+PY
+
+rm -f "${AGENT_SCRIPT}"
+
+echo "ALL DONE"
+echo "RUN_ROOT     : ${RUN_ROOT}"
+echo "Output root  : ${FT_OUTPUT_ROOT}"
+echo "Logs root    : ${FT_LOG_ROOT}"
+echo "Best run info: ${FT_OUTPUT_ROOT}/best_run.txt"
