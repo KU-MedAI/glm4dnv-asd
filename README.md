@@ -43,23 +43,23 @@ This repository includes:
 
 ## Repository Structure
 
-```bash
-├── data
-│ 
-├── zero-shot
-│ 
-├── fine-tuned
-│   ├── README.md
-│   └── {model directories}
-│        ├── classification 
-│        ├── regression
-│        └── variant-pooling
-│ 
-├── set_transformer
-│ 
-└── analysis
-    ├── fine-tuning-effects
-    └── biological_interpretability
+```text
+project_root/
+├── data/                                 # Dataset preparation and description
+│
+├── zero-shot/                            # Zero-shot variant representation
+│
+├── fine-tuned/                           # Fine-tuned genomic language models
+│   └── {model}/
+│       ├── classification/               # Fine-tuning for variant classification tasks
+│       ├── regression/                   # Fine-tuning for variant regression tasks
+│       └── variant-pooling/              # Variant pooling for fine-tuned models
+│
+├── set_transformer/                      # Sample-level ASD prediction model
+│
+└── analysis/
+    ├── fine-tuning-effects/              # Analysis of representation shifts and attention changes
+    └── biological_interpretability/      # Pathway enrichment and interpretability analyses
 ```
 
 ---
