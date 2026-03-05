@@ -26,25 +26,23 @@ These analyses assess embedding representations and attention scores at the vari
 
 **Data used:**
 - **Variant-to-gene mapping data** generated using **Ensembl VEP**
-- **CADD Phred scores** used to define functionally deleterious variants (e.g., **CADD ≥ 10**)
-- **Reference and variant embeddings** generated from each **model in both Zero-shot and Fine-tuned settings**
-- **Attention scores** derived from each **model–task combination**
+- **CADD Phred scores** used to define functionally deleterious variants
+- **Reference and variant embeddings** from each model in both **Zero-shot** and **Fine-tuned** settings
+- **Attention scores** from each **model–task combination**
 
-### Representational shifts in latent embedding space
-- Compute **cosine similarity** between **reference and variant embeddings** for zero-shot and fine-tuned models.
-- Stratify variants by **VEP impact** and evaluate whether shifts are enriched in **pathogenic variants**.
-- Stratify variants by **CADD** and evaluate whether shifts are enriched in **pathogenic variants**.
+### 1. Representational shifts in latent embedding space
+- Compute **cosine similarity** between **reference and variant embeddings**
+- Stratify variants by **VEP impact** and **CADD scores** to evaluate enrichment of **functionally important variants**
 
-### Functional variant enrichment in attention scores
-- Normalize variant-level attention scores within each sample using **CLR transformation**.
-- Select the **top 20% attention-ranked variants** for each model–task combination.
-- Define functional variant sets using **VEP high-impact consequences** and **CADD ≥ 10 annotations**.
-- Evaluate enrichment using **precision/recall** and **Fisher’s exact test**.
+### 2. Functional variant enrichment in attention scores
+- Normalize **variant-level attention scores** using **CLR transformation**.
+- Select the **top 20% attention-ranked variants**.
+- Evaluate enrichment of **functional variants** using **precision/recall** and **Fisher’s exact test**
 
-### Alignment between prediction confidence and disease gene prioritization
-- Normalize attention scores across gLMs using **CLR transformation** to ensure statistical consistency.
-- Compare the **top and bottom 20% of samples** based on prediction probabilities to evaluate focus shifts.
-- Quantify the alignment between **model confidence** and **risk gene attention** using Cliff’s delta.
+### 3. Alignment between prediction confidence and disease gene prioritization
+- Normalize **attention scores** across **gLMs** using **CLR transformation**
+- Compare **top and bottom 20% samples** based on **prediction probabilities**
+- Quantify the association between **model confidence** and **risk gene attention** using **Cliff’s delta**
 
 
 ---
@@ -56,14 +54,14 @@ These analyses assess whether variants prioritized by model attention converge o
 **Data used:**
 - **Variant-to-gene mapping data** generated using Ensembl VEP
 - Attention scores derived from each **model–task combination**
-- Clinical severity annotations (**ADOS CSS** and **VABS**)
+- Clinical severity annotations (**ADOS** and **VABS**)
 
-### Attention-based variant prioritization enrichment analysis
+### 1. Attention-based variant prioritization enrichment analysis
 - Normalize attention scores within each sample using **CLR transformation**
 - Select **top and bottom 10% attention-ranked variants**
 - Map variants to genes and perform **GO Biological Process enrichment**
 
-### Enrichment analysis of ASD subgroups based on severity annotation
+### 2. Enrichment analysis of ASD subgroups based on severity annotation
 - Apply the same enrichment framework to **clinically defined ASD subgroups**
 - Define severe groups using **ADOS and VABS severity annotations**
 - Compare pathway enrichment patterns between **top/bottom attention-ranked variants**
