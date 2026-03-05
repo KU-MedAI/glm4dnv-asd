@@ -9,7 +9,7 @@ It includes:
 - **task-specific fine-tuning scripts for multiple gLMs**
 - **scripts for variant pooling to generate variant-level embeddings from fine-tuned models**
 
-Fine-tuning uses task-specific training datasets, while variant pooling is applied to de novo variant datasets used for downstream ASD prediction.
+Fine-tuning uses task-specific training datasets, while variant pooling is applied to de novo variant datasets used for downstream Autism Spectrum Disorder (ASD) prediction.
 
 ## Directory Structure
 ```text
