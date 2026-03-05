@@ -22,6 +22,7 @@ The variant dataset links each sample (**vcf_iid**) to its corresponding genetic
 - Reference and variant DNA sequences extracted at multiple window sizes  
 - Mutation indices indicating the exact position of the variant within each sequence window  
 
+<br>
 Clinical severity annotations were also collected when available and linked to genomic data using the **vcf_iid** identifier.
 
 **Clinical metrics used for downstream analyses:**
