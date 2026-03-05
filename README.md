@@ -95,7 +95,7 @@ This study uses two types of datasets: **de novo variant datasets for ASD predic
 
 De novo variants were collected from multiple ASD cohorts, including **SSC, SPARK, MSSNG, and a Korean ASD cohort**. Clinical severity annotations (e.g., ADOS and VABS) were used in downstream analyses when available.
 
-Fine-tuning tasks were constructed using publicly available datasets such as **ClinVar, gnomAD, the BEND benchmark, and the NCRE activity dataset**.
+Fine-tuning tasks were constructed using publicly available datasets such as **ClinVar missense variants, gnomAD variants, BEND non-coding variants, and non-coding regulatory elements (NCREs)**.
 
 Detailed instructions for preparing the required datasets are provided in: `data/README.md`
 
@@ -105,7 +105,7 @@ Detailed instructions for preparing the required datasets are provided in: `data
 
 The main steps to reproduce the benchmark are outlined below.
 
-### 1. Embedding Varaint Sequences
+### 1. Embedding Variant Sequences
 
 #### 1-1. Variant pooling in zero-shot
 Extract variant-level embeddings using pretrained gLMs.
@@ -132,7 +132,7 @@ bash fine-tuned/{model}/variant-pooling/run_ft_{model}_variant_pooling.sh
 
 ### 2. ASD prediction
 
-Aggregate variant embeddings at the sampl-level and perform ASD prediction using a Set Transformer model.
+Aggregate variant embeddings at the sample level and perform ASD prediction using a Set Transformer model.
 
 ```python
 set_transformer/set_transformer.ipynb
