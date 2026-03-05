@@ -3,7 +3,7 @@
 ---
 
 ## Overview
-Autism Spectrum Disorder (ASD) 넣어주기 (아래에서 약어 사용함)
+This section contains analyses designed to investigate how genomic language model (gLM) representations change after fine-tuning in the context of Autism Spectrum Disorder (ASD) prediction.
 
 ## Directory Structure
 ```text
@@ -22,6 +22,22 @@ analysis/
 
 ## Analysis of fine-tuning effects
 ### Representational shifts in latent embedding space
+
+- 1. Cosine similarity distribution analysis
+  - Normalize reference and variant embeddings and calculate cosine similarity.
+  - Compare Zero-shot vs. Fine-tuned distributions using histogram grids.
+  - Quantify distributional shifts using Cliff's Delta (δ) effect size.
+
+- 2. VEP-based variant impact enrichment analysis
+  - Categorize variants into HIGH and NON-HIGH impact groups based on VEP annotations.
+  - Calculate Delta Cosine (Sim_FT − Sim_Zero) for each variant.
+  - Compare shifts between impact groups to assess molecular consequence sensitivity.
+
+- 3. Pathogenicity enrichment analysis based on CADD scores
+  - Define Pathogenic and Benign subgroups using CADD Phred score thresholds.
+  - Perform Mann–Whitney U tests with Bonferroni correction for statistical significance.
+  - Compare Delta Cosine patterns to validate the clinical interpretability of model shifts.
+
 ### Functional variant enrichment in attention scores
 ### Alignment between prediction confidence and disease gene prioritization
 
