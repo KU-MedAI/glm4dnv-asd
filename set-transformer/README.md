@@ -7,4 +7,6 @@ The model aggregates variant representations to perform individual-level classif
 
 ## Usage
 **데이터 경로나 모델명 등 바꿀 거 있으면 추가로 넣기**
+<br>
+
 Run the notebook: `set_transformer.ipynb`
