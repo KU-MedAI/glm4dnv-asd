@@ -24,11 +24,11 @@ analysis/
 ## Analysis of fine-tuning effects
 These analyses assess embedding representations and attention scores at the variant and gene levels.
 
-**Data used:**
-- **Variant-to-gene mapping data** generated using **Ensembl VEP**
-- **CADD Phred scores** used to define functionally deleterious variants
-- **Reference and variant embeddings** from each model in both **zero-shot** and **fine-tuned** settings
-- **Attention scores** from each **model–task combination**
+> **Data used:**
+> - **Variant-to-gene mapping data** generated using **Ensembl VEP**
+> - **CADD Phred scores** used to define functionally deleterious variants
+> - **Reference and variant embeddings** from each model in both **zero-shot** and **fine-tuned** settings
+> - **Attention scores** from each **model–task combination**
 
 ### 1. Representational shifts in latent embedding space
 - Compute **cosine similarity** between **reference and variant embeddings**
@@ -51,10 +51,10 @@ These analyses assess embedding representations and attention scores at the vari
 
 These analyses assess whether variants prioritized by model attention converge on biological pathways associated with ASD. 
 
-**Data used:**
-- **Variant-to-gene mapping data** generated using Ensembl VEP
-- Attention scores derived from each **model–task combination**
-- Clinical severity annotations (**ADOS** and **VABS**)
+> **Data used:**
+> - **Variant-to-gene mapping data** generated using Ensembl VEP
+> - Attention scores derived from each **model–task combination**
+> - Clinical severity annotations (**ADOS** and **VABS**)
 
 ### 1. Attention-based variant prioritization enrichment analysis
 - Normalize attention scores within each sample using **CLR transformation**
