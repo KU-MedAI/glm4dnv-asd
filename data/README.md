@@ -4,7 +4,7 @@
 
 This study uses two types of datasets: **de novo variant datasets for ASD prediction** and **datasets used for fine-tuning tasks**.
 
-## 1. De novo variant datasets
+## De novo variant datasets
 
 De novo variants were collected from multiple ASD cohorts:
 
@@ -32,7 +32,7 @@ Clinical severity annotations were also collected when available and linked to g
 
 ---
 
-## 2. Fine-tuning task datasets
+## Fine-tuning task datasets
 <br>
 
 Fine-tuning tasks were constructed using publicly available datasets:
