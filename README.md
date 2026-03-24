@@ -4,7 +4,7 @@
 
 ## Abstract
 <div align="center">
-![260323_figure1](https://github.com/user-attachments/assets/a23dbc2f-3304-4d3a-958a-846ff9009d93)
+<img width="8738" height="6612" alt="260324_figure1" src="https://github.com/user-attachments/assets/7a015300-14df-4968-8c10-d789248b2f62" />
 
 </div>
 <br>
